@@ -1,14 +1,18 @@
-from flask import Flask, jsonify
+from flask import Flask
 
-from players import Player
+from models import db, Player
+from routes import api
 
 app = Flask(__name__)
+db.init_app(app)
+app.register_blueprint(api)
 
-
-@app.route('/api/players')
-def get_players():
-    return jsonify([Player('Mike', 205).json(), Player('Rocky', 195).json(), Player('Bob', 193).json()])
-
+db.create_all(app=app)
+with app.app_context():
+    db.session.add(Player(name='Mike', height=205))
+    db.session.add(Player(name='Rocky', height=198))
+    db.session.add(Player(name='Bob', height=195))
+    db.session.commit()
 
 if __name__ == '__main__':
     app.run()
