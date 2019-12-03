@@ -1,11 +1,12 @@
 from flask import Flask
 
 from models import db, Player
-from routes import api
+from routes import api, index
 
 app = Flask(__name__)
 db.init_app(app)
 app.register_blueprint(api)
+app.register_blueprint(index)
 
 db.create_all(app=app)
 with app.app_context():
